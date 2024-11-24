@@ -80,19 +80,27 @@
                 const canvas = document.createElement('canvas');
                 const pica = window.pica();
                 
+                // Встановлюємо розміри стиснутого зображення (наприклад, 500px по ширині)
+                const width = 500;
+                const height = (image.height / image.width) * width;  // Пропорційне зменшення
+                
                 // Виконання стиснення
-                pica.resize(image, canvas)
-                    .then(function(result) {
-                        // Показуємо стиснуте зображення
-                        const resultDiv = document.getElementById("result");
-                        const compressedImage = document.createElement("img");
-                        compressedImage.src = canvas.toDataURL();
-                        resultDiv.innerHTML = ""; // Очищаємо попередній результат
-                        resultDiv.appendChild(compressedImage);
-                    })
-                    .catch(function(error) {
-                        alert("Compression failed: " + error);
-                    });
+                pica.resize(image, canvas, {
+                    unsharpAmount: 80,
+                    unsharpThreshold: 2,
+                    quality: 3
+                })
+                .then(function(result) {
+                    // Показуємо стиснуте зображення
+                    const resultDiv = document.getElementById("result");
+                    const compressedImage = document.createElement("img");
+                    compressedImage.src = canvas.toDataURL();
+                    resultDiv.innerHTML = ""; // Очищаємо попередній результат
+                    resultDiv.appendChild(compressedImage);
+                })
+                .catch(function(error) {
+                    alert("Compression failed: " + error);
+                });
             };
         };
         
