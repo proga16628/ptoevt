@@ -78,8 +78,8 @@
             image.onload = function() {
                 // Створення канваса для стиснення
                 const canvas = document.createElement('canvas');
-                const pica = window.pica();
-                
+                const pica = Pica(); // Використовуємо без `window.`
+
                 // Встановлюємо розміри стиснутого зображення (наприклад, 500px по ширині)
                 const width = 500;
                 const height = (image.height / image.width) * width;  // Пропорційне зменшення
@@ -110,3 +110,4 @@
 
 </body>
 </html>
+
