@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Compression</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input[type="file"] {
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result img {
+            max-width: 100%;
+        }
+    </style>
+    <!-- Підключення бібліотеки Pica для стиснення зображень -->
+    <script src="https://cdn.jsdelivr.net/npm/pica@8.0.1/dist/pica.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>Welcome to the Image Compression Site!</h1>
+    <p>Upload an image to compress it.</p>
+    
+    <!-- Форма для завантаження зображення -->
+    <form id="uploadForm">
+        <input type="file" id="imageInput" accept="image/*" required>
+        <button type="submit">Compress Image</button>
+    </form>
+    
+    <div id="result"></div>
+</div>
+
+<script>
+    document.getElementById("uploadForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const fileInput = document.getElementById("imageInput");
+        const file = fileInput.files[0];
+        
+        if (!file) {
+            alert("Please choose an image to upload!");
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const image = new Image();
+            image.src = e.target.result;
+            
+            image.onload = function() {
+                // Створення канваса для стиснення
+                const canvas = document.createElement('canvas');
+                const pica = window.pica();
+                
+                // Виконання стиснення
+                pica.resize(image, canvas)
+                    .then(function(result) {
+                        // Показуємо стиснуте зображення
+                        const resultDiv = document.getElementById("result");
+                        const compressedImage = document.createElement("img");
+                        compressedImage.src = canvas.toDataURL();
+                        resultDiv.innerHTML = ""; // Очищаємо попередній результат
+                        resultDiv.appendChild(compressedImage);
+                    })
+                    .catch(function(error) {
+                        alert("Compression failed: " + error);
+                    });
+            };
+        };
+        
+        reader.readAsDataURL(file);
+    });
+</script>
+
+</body>
+</html>
